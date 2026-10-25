@@ -8,6 +8,13 @@
       "when": 1792912412083,
       "tag": "0000_voicelink_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792912456141,
+      "tag": "0001_voicelink_admin_settings_write",
+      "breakpoints": true
     }
   ]
 }
