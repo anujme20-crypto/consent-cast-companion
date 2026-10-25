@@ -14,13 +14,226 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_settings: {
+        Row: {
+          pairing_code: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          pairing_code: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          pairing_code?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      devices: {
+        Row: {
+          admin_id: string
+          created_at: string
+          id: string
+          last_seen: string | null
+          name: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string
+          id?: string
+          last_seen?: string | null
+          name: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string
+          id?: string
+          last_seen?: string | null
+          name?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "devices_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "devices_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+        }
+        Relationships: []
+      }
+      voice_sessions: {
+        Row: {
+          accepted_at: string | null
+          admin_id: string
+          device_id: string
+          end_reason: string | null
+          ended_at: string | null
+          id: string
+          started_at: string
+          status: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          admin_id: string
+          device_id: string
+          end_reason?: string | null
+          ended_at?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          admin_id?: string
+          device_id?: string
+          end_reason?: string | null
+          ended_at?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voice_sessions_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "voice_sessions_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webrtc_ice: {
+        Row: {
+          candidate: Json
+          created_at: string
+          id: string
+          sender_role: string
+          session_id: string
+        }
+        Insert: {
+          candidate: Json
+          created_at?: string
+          id?: string
+          sender_role: string
+          session_id: string
+        }
+        Update: {
+          candidate?: Json
+          created_at?: string
+          id?: string
+          sender_role?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webrtc_ice_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "voice_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webrtc_signals: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          sdp: string
+          sender_role: string
+          session_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          sdp: string
+          sender_role: string
+          session_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          sdp?: string
+          sender_role?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webrtc_signals_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "voice_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_signal: {
+        Args: { _role: string; _session_id: string }
+        Returns: boolean
+      }
+      is_session_participant: {
+        Args: { _session_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
