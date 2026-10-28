@@ -29,10 +29,12 @@ const ICE_SERVERS: RTCIceServer[] = [
 const OFFER_RETRY_MS = 1500;
 const OFFER_MAX_TRIES = 8;
 
-type Signal =
-  | { role: VoiceRole; kind: "offer" | "answer"; sdp: string }
-  | { role: VoiceRole; kind: "ice"; candidate: RTCIceCandidateInit }
-  | { role: VoiceRole; kind: "bye" };
+type SignalBody =
+  | { kind: "offer" | "answer"; sdp: string }
+  | { kind: "ice"; candidate: RTCIceCandidateInit }
+  | { kind: "bye" };
+
+type Signal = SignalBody & { role: VoiceRole };
 
 export interface VoiceLinkOptions {
   sessionId: string;
@@ -56,7 +58,7 @@ export class VoiceLink {
   private pendingIce: RTCIceCandidateInit[] = [];
   private lastBytes = 0;
   private lastBytesTs = 0;
-  private currentBitrate = VOICE_AUDIO_PROFILE.opusMaxAverageBitrate;
+  private currentBitrate: number = VOICE_AUDIO_PROFILE.opusMaxAverageBitrate;
 
   constructor(private opts: VoiceLinkOptions) {}
 
@@ -111,7 +113,7 @@ export class VoiceLink {
     return channel;
   }
 
-  private send(payload: Omit<Signal, "role">): void {
+  private send(payload: SignalBody): void {
     void this.channel?.send({
       type: "broadcast",
       event: "sig",
@@ -129,7 +131,7 @@ export class VoiceLink {
     }
     const pc = new RTCPeerConnection({
       iceServers: ICE_SERVERS,
-      bundlePolicy: "max-bundled",
+      bundlePolicy: "max-bundle",
       rtcpMuxPolicy: "require",
     });
     this.pc = pc;
@@ -269,13 +271,24 @@ export class VoiceLink {
     const pc = this.pc;
     if (!pc || this.closed) return;
     const report = await pc.getStats();
+    interface StatShape {
+      type: string;
+      kind?: string;
+      jitter?: number;
+      packetsLost?: number;
+      packetsReceived?: number;
+      bytesReceived?: number;
+      bytesSent?: number;
+      state?: string;
+      currentRoundTripTime?: number;
+    }
     let jitterMs: number | null = null;
     let lossPct: number | null = null;
     let rttMs: number | null = null;
     let bytes = 0;
     let hasAudio = false;
     report.forEach((raw) => {
-      const stat = raw as unknown as Record<string, unknown> & { type: string };
+      const stat = raw as unknown as StatShape;
       if (stat.type === "inbound-rtp" && stat.kind === "audio") {
         hasAudio = true;
         if (typeof stat.jitter === "number") jitterMs = stat.jitter * 1000;
@@ -324,8 +337,11 @@ export class VoiceLink {
       .find((s) => s.track?.kind === "audio");
     if (!sender) return;
     const params = sender.getParameters();
-    params.encodings = params.encodings?.length ? params.encodings : [{}];
-    params.encodings[0].maxBitrate = next;
+    if (params.encodings && params.encodings.length > 0) {
+      params.encodings[0] = { ...params.encodings[0], maxBitrate: next };
+    } else {
+      params.encodings = [{ maxBitrate: next }];
+    }
     try {
       await sender.setParameters(params);
     } catch {
