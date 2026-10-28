@@ -15,6 +15,13 @@
       "when": 1792912456141,
       "tag": "0001_voicelink_admin_settings_write",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793158195790,
+      "tag": "0002_voicelink_device_token",
+      "breakpoints": true
     }
   ]
 }
