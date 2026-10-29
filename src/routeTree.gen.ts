@@ -10,33 +10,89 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicDeviceAcceptRouteImport } from './routes/api/public/device/accept'
+import { Route as ApiPublicDeviceEndRouteImport } from './routes/api/public/device/end'
+import { Route as ApiPublicDevicePairRouteImport } from './routes/api/public/device/pair'
+import { Route as ApiPublicDeviceSessionRouteImport } from './routes/api/public/device/session'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicDeviceAcceptRoute = ApiPublicDeviceAcceptRouteImport.update({
+  id: '/api/public/device/accept',
+  path: '/api/public/device/accept',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicDeviceEndRoute = ApiPublicDeviceEndRouteImport.update({
+  id: '/api/public/device/end',
+  path: '/api/public/device/end',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicDevicePairRoute = ApiPublicDevicePairRouteImport.update({
+  id: '/api/public/device/pair',
+  path: '/api/public/device/pair',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicDeviceSessionRoute = ApiPublicDeviceSessionRouteImport.update({
+  id: '/api/public/device/session',
+  path: '/api/public/device/session',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/device/accept': typeof ApiPublicDeviceAcceptRoute
+  '/api/public/device/end': typeof ApiPublicDeviceEndRoute
+  '/api/public/device/pair': typeof ApiPublicDevicePairRoute
+  '/api/public/device/session': typeof ApiPublicDeviceSessionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/device/accept': typeof ApiPublicDeviceAcceptRoute
+  '/api/public/device/end': typeof ApiPublicDeviceEndRoute
+  '/api/public/device/pair': typeof ApiPublicDevicePairRoute
+  '/api/public/device/session': typeof ApiPublicDeviceSessionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/device/accept': typeof ApiPublicDeviceAcceptRoute
+  '/api/public/device/end': typeof ApiPublicDeviceEndRoute
+  '/api/public/device/pair': typeof ApiPublicDevicePairRoute
+  '/api/public/device/session': typeof ApiPublicDeviceSessionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/api/public/device/accept'
+    | '/api/public/device/end'
+    | '/api/public/device/pair'
+    | '/api/public/device/session'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/api/public/device/accept'
+    | '/api/public/device/end'
+    | '/api/public/device/pair'
+    | '/api/public/device/session'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/public/device/accept'
+    | '/api/public/device/end'
+    | '/api/public/device/pair'
+    | '/api/public/device/session'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicDeviceAcceptRoute: typeof ApiPublicDeviceAcceptRoute
+  ApiPublicDeviceEndRoute: typeof ApiPublicDeviceEndRoute
+  ApiPublicDevicePairRoute: typeof ApiPublicDevicePairRoute
+  ApiPublicDeviceSessionRoute: typeof ApiPublicDeviceSessionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +104,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/device/accept': {
+      id: '/api/public/device/accept'
+      path: '/api/public/device/accept'
+      fullPath: '/api/public/device/accept'
+      preLoaderRoute: typeof ApiPublicDeviceAcceptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/device/end': {
+      id: '/api/public/device/end'
+      path: '/api/public/device/end'
+      fullPath: '/api/public/device/end'
+      preLoaderRoute: typeof ApiPublicDeviceEndRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/device/pair': {
+      id: '/api/public/device/pair'
+      path: '/api/public/device/pair'
+      fullPath: '/api/public/device/pair'
+      preLoaderRoute: typeof ApiPublicDevicePairRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/device/session': {
+      id: '/api/public/device/session'
+      path: '/api/public/device/session'
+      fullPath: '/api/public/device/session'
+      preLoaderRoute: typeof ApiPublicDeviceSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicDeviceAcceptRoute: ApiPublicDeviceAcceptRoute,
+  ApiPublicDeviceEndRoute: ApiPublicDeviceEndRoute,
+  ApiPublicDevicePairRoute: ApiPublicDevicePairRoute,
+  ApiPublicDeviceSessionRoute: ApiPublicDeviceSessionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
