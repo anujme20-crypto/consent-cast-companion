@@ -41,6 +41,7 @@ jobs:
         run: |
           npm install @capacitor/core @capacitor/android
           npm install -D @capacitor/cli
+          mkdir -p dist android/app/src/main/assets/public
           npx cap sync android
           cd android
           chmod +x gradlew
