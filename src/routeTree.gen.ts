@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as DeviceRouteImport } from './routes/device'
 import { Route as ApiPublicDeviceAcceptRouteImport } from './routes/api/public/device/accept'
 import { Route as ApiPublicDeviceEndRouteImport } from './routes/api/public/device/end'
 import { Route as ApiPublicDevicePairRouteImport } from './routes/api/public/device/pair'
@@ -18,6 +20,16 @@ import { Route as ApiPublicDeviceSessionRouteImport } from './routes/api/public/
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeviceRoute = DeviceRouteImport.update({
+  id: '/device',
+  path: '/device',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicDeviceAcceptRoute = ApiPublicDeviceAcceptRouteImport.update({
@@ -43,6 +55,8 @@ const ApiPublicDeviceSessionRoute = ApiPublicDeviceSessionRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/device': typeof DeviceRoute
   '/api/public/device/accept': typeof ApiPublicDeviceAcceptRoute
   '/api/public/device/end': typeof ApiPublicDeviceEndRoute
   '/api/public/device/pair': typeof ApiPublicDevicePairRoute
@@ -50,6 +64,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/device': typeof DeviceRoute
   '/api/public/device/accept': typeof ApiPublicDeviceAcceptRoute
   '/api/public/device/end': typeof ApiPublicDeviceEndRoute
   '/api/public/device/pair': typeof ApiPublicDevicePairRoute
@@ -58,6 +74,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/device': typeof DeviceRoute
   '/api/public/device/accept': typeof ApiPublicDeviceAcceptRoute
   '/api/public/device/end': typeof ApiPublicDeviceEndRoute
   '/api/public/device/pair': typeof ApiPublicDevicePairRoute
@@ -67,6 +85,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/device'
     | '/api/public/device/accept'
     | '/api/public/device/end'
     | '/api/public/device/pair'
@@ -74,6 +94,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
+    | '/device'
     | '/api/public/device/accept'
     | '/api/public/device/end'
     | '/api/public/device/pair'
@@ -81,6 +103,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/device'
     | '/api/public/device/accept'
     | '/api/public/device/end'
     | '/api/public/device/pair'
@@ -89,6 +113,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  DeviceRoute: typeof DeviceRoute
   ApiPublicDeviceAcceptRoute: typeof ApiPublicDeviceAcceptRoute
   ApiPublicDeviceEndRoute: typeof ApiPublicDeviceEndRoute
   ApiPublicDevicePairRoute: typeof ApiPublicDevicePairRoute
@@ -102,6 +128,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/device': {
+      id: '/device'
+      path: '/device'
+      fullPath: '/device'
+      preLoaderRoute: typeof DeviceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/device/accept': {
@@ -137,6 +177,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  DeviceRoute: DeviceRoute,
   ApiPublicDeviceAcceptRoute: ApiPublicDeviceAcceptRoute,
   ApiPublicDeviceEndRoute: ApiPublicDeviceEndRoute,
   ApiPublicDevicePairRoute: ApiPublicDevicePairRoute,
