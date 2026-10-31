@@ -52,6 +52,8 @@ interface ActiveCall {
 
 function DevicePage() {
   const [phase, setPhase] = useState<Phase>("loading");
+  const phaseRef = useRef<Phase>("loading");
+  phaseRef.current = phase;
   const [device, setDevice] = useState<StoredDevice | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [needTap, setNeedTap] = useState(false);
@@ -176,7 +178,7 @@ function DevicePage() {
       })
       .on("broadcast", { event: "cancel" }, () => {
         // Admin cancelled before the link opened.
-        if (callRef.current && phase !== "live") {
+        if (callRef.current && phaseRef.current !== "live") {
           clearCall();
           setPhase("waiting");
         }

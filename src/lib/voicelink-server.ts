@@ -98,7 +98,10 @@ export const startVoiceSession = createServerFn({ method: "POST" })
       .insert({ admin_id: userId, device_id: data.deviceId, status: "ringing" })
       .select("id,status,started_at")
       .single();
-    if (error || !session) throw new Error("Could not start the call");
+    if (error || !session) {
+      console.error("[startVoiceSession] insert failed:", error?.message, error?.details, error?.hint, error?.code);
+      throw new Error("Could not start the call");
+    }
     return session;
   });
 
