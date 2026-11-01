@@ -418,7 +418,7 @@ function AdminPage() {
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{device.name}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <div className="text-xs text-muted-foreground">
                       <Badge
                         variant={device.status === "active" ? "secondary" : "destructive"}
                         className="mr-1"
@@ -426,7 +426,7 @@ function AdminPage() {
                         {device.status}
                       </Badge>
                       last seen {relative(device.last_seen)}
-                    </p>
+                    </div>
                   </div>
                   <div className="flex shrink-0 gap-2">
                     {!inCall ? (
