@@ -218,8 +218,10 @@ export class VoiceLink {
         sdp: mungeSdpForLowBandwidth(offer.sdp ?? ""),
       });
     }
-    if (pc.signalingState !== "stable") return;
-    this.send({ kind: "offer", sdp: pc.localDescription!.sdp });
+    // After setLocalDescription the state is "have-local-offer", not
+    // "stable" — gate on having a local offer, not on being stable.
+    if (!pc.localDescription) return;
+    this.send({ kind: "offer", sdp: pc.localDescription.sdp });
     this.offerAttempts += 1;
     if (this.offerAttempts >= OFFER_MAX_TRIES) {
       this.opts.onState("failed");
