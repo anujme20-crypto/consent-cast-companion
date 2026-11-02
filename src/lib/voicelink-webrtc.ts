@@ -142,8 +142,12 @@ export class VoiceLink {
     });
     this.pc = pc;
     pc.onicecandidate = ({ candidate }) => {
+      console.info("[VoiceLink dbg] ice", this.opts.role, candidate ? candidate.type : "end");
       if (candidate) this.send({ kind: "ice", candidate: candidate.toJSON() });
     };
+    setTimeout(() => {
+      console.info("[VoiceLink dbg] gather", this.opts.role, pc.iceGatheringState, pc.localDescription?.sdp?.slice(0, 60));
+    }, 3000);
     pc.ontrack = (event) => {
       const stream = event.streams[0];
       if (stream) this.opts.onRemoteStream?.(stream);
