@@ -98,6 +98,7 @@ export class VoiceLink {
         config: { broadcast: { self: false, ack: false } },
       })
       .on("broadcast", { event: "sig" }, ({ payload }) => {
+        console.info("[VoiceLink dbg] sig received", JSON.stringify(payload).slice(0, 80));
         void this.handleSignal(payload as Signal);
       });
     const subscribed = new Promise<boolean>((resolve) => {
@@ -114,6 +115,7 @@ export class VoiceLink {
   }
 
   private send(payload: SignalBody): void {
+    console.info("[VoiceLink dbg] send", this.opts.role, payload.kind);
     void this.channel?.send({
       type: "broadcast",
       event: "sig",
@@ -143,6 +145,7 @@ export class VoiceLink {
       if (stream) this.opts.onRemoteStream?.(stream);
     };
     pc.onconnectionstatechange = () => {
+      console.info("[VoiceLink dbg] pcState", this.opts.role, pc.connectionState, pc.iceConnectionState);
       switch (pc.connectionState) {
         case "connected":
           this.opts.onState("live");
