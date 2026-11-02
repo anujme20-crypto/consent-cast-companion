@@ -99,7 +99,6 @@ export const startVoiceSession = createServerFn({ method: "POST" })
       .select("id,status,started_at")
       .single();
     if (error || !session) {
-      console.error("[startVoiceSession] insert failed:", error?.message, error?.details, error?.hint, error?.code);
       throw new Error("Could not start the call");
     }
     return session;

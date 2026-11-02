@@ -209,18 +209,14 @@ export class VoiceLink {
     const pc = this.pc;
     if (!pc || this.closed || this.remoteAnswered) return;
     if (pc.signalingState === "stable" && !pc.localDescription) {
-      try {
-        const offer = await pc.createOffer({
-          offerToReceiveAudio: true,
-          offerToReceiveVideo: false,
-        });
-        await pc.setLocalDescription({
-          type: "offer",
-          sdp: mungeSdpForLowBandwidth(offer.sdp ?? ""),
-        });
-      } catch (error) {
-        throw error;
-      }
+      const offer = await pc.createOffer({
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: false,
+      });
+      await pc.setLocalDescription({
+        type: "offer",
+        sdp: mungeSdpForLowBandwidth(offer.sdp ?? ""),
+      });
     }
     // After setLocalDescription the state is "have-local-offer", not
     // "stable" — gate on having a local offer, not on being stable.
