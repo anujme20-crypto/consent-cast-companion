@@ -67,18 +67,15 @@ export class VoiceLink {
     this.opts.onState("connecting");
     this.channel = await this.openChannel();
     const pc = this.ensurePeer();
-    console.info("[VoiceLink dbg] admin capturing mic");
     this.localStream = await navigator.mediaDevices.getUserMedia({
       audio: MIC_CONSTRAINTS,
       video: false,
     });
-    console.info("[VoiceLink dbg] admin mic ok");
     this.opts.onLocalStream?.(this.localStream);
     for (const track of this.localStream.getAudioTracks()) {
       pc.addTrack(track, this.localStream);
     }
     await this.sendOffer();
-    console.info("[VoiceLink dbg] admin offer loop started");
   }
 
   /** Target phone side: open the channel and wait for the admin's offer. */
@@ -105,7 +102,6 @@ export class VoiceLink {
       });
     const subscribed = new Promise<boolean>((resolve) => {
       channel.subscribe((status) => {
-        console.info("[VoiceLink dbg] channel", this.opts.role, status);
         if (status === "SUBSCRIBED") resolve(true);
       });
     });
@@ -211,7 +207,6 @@ export class VoiceLink {
 
   private async sendOffer(): Promise<void> {
     const pc = this.pc;
-    console.info("[VoiceLink dbg] sendOffer", this.opts.role, pc?.signalingState, !!pc?.localDescription);
     if (!pc || this.closed || this.remoteAnswered) return;
     if (pc.signalingState === "stable" && !pc.localDescription) {
       try {
@@ -223,9 +218,7 @@ export class VoiceLink {
           type: "offer",
           sdp: mungeSdpForLowBandwidth(offer.sdp ?? ""),
         });
-        console.info("[VoiceLink dbg] local offer set");
       } catch (error) {
-        console.error("[VoiceLink dbg] createOffer/setLocal failed", error);
         throw error;
       }
     }
