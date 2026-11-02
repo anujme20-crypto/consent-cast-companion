@@ -103,6 +103,7 @@ export class VoiceLink {
       });
     const subscribed = new Promise<boolean>((resolve) => {
       channel.subscribe((status) => {
+        console.info("[VoiceLink dbg] channel", this.opts.role, status);
         if (status === "SUBSCRIBED") resolve(true);
       });
     });
