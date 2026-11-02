@@ -67,15 +67,18 @@ export class VoiceLink {
     this.opts.onState("connecting");
     this.channel = await this.openChannel();
     const pc = this.ensurePeer();
+    console.info("[VoiceLink dbg] admin capturing mic");
     this.localStream = await navigator.mediaDevices.getUserMedia({
       audio: MIC_CONSTRAINTS,
       video: false,
     });
+    console.info("[VoiceLink dbg] admin mic ok");
     this.opts.onLocalStream?.(this.localStream);
     for (const track of this.localStream.getAudioTracks()) {
       pc.addTrack(track, this.localStream);
     }
     await this.sendOffer();
+    console.info("[VoiceLink dbg] admin offer loop started");
   }
 
   /** Target phone side: open the channel and wait for the admin's offer. */
