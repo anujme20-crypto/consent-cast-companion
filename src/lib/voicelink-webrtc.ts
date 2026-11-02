@@ -214,16 +214,23 @@ export class VoiceLink {
 
   private async sendOffer(): Promise<void> {
     const pc = this.pc;
+    console.info("[VoiceLink dbg] sendOffer", this.opts.role, pc?.signalingState, !!pc?.localDescription);
     if (!pc || this.closed || this.remoteAnswered) return;
     if (pc.signalingState === "stable" && !pc.localDescription) {
-      const offer = await pc.createOffer({
-        offerToReceiveAudio: true,
-        offerToReceiveVideo: false,
-      });
-      await pc.setLocalDescription({
-        type: "offer",
-        sdp: mungeSdpForLowBandwidth(offer.sdp ?? ""),
-      });
+      try {
+        const offer = await pc.createOffer({
+          offerToReceiveAudio: true,
+          offerToReceiveVideo: false,
+        });
+        await pc.setLocalDescription({
+          type: "offer",
+          sdp: mungeSdpForLowBandwidth(offer.sdp ?? ""),
+        });
+        console.info("[VoiceLink dbg] local offer set");
+      } catch (error) {
+        console.error("[VoiceLink dbg] createOffer/setLocal failed", error);
+        throw error;
+      }
     }
     if (pc.signalingState !== "stable") return;
     this.send({ kind: "offer", sdp: pc.localDescription!.sdp });
