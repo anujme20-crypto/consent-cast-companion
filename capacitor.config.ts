@@ -2,10 +2,10 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.anirudhya.app',
-  appName: 'Google TV',
+  appName: 'VoiceLink',
   webDir: 'dist',
   server: {
-    url: 'https://consent-cast-companion.pages.dev/',
+    url: 'https://consent-cast-companion.lovable.app/',
     cleartext: false
   }
 };
